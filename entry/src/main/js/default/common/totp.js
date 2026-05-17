@@ -11,15 +11,17 @@ var B32_ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
  */
 function base32Decode(base32str) {
   var s = base32str.replace(/[\s\-=]/g, '').toUpperCase();
-  var bits = 0, val = 0, idx = 0;
-  var out = new Uint8Array(Math.floor(s.length * 5 / 8));
+  var bits = 0,
+    val = 0,
+    idx = 0;
+  var out = new Uint8Array(Math.floor((s.length * 5) / 8));
   for (var i = 0; i < s.length; i++) {
     var ci = B32_ALPHA.indexOf(s[i]);
     if (ci === -1) throw new Error('Invalid base32 character: ' + s[i]);
     val = (val << 5) | ci;
     bits += 5;
     if (bits >= 8) {
-      out[idx++] = (val >>> (bits - 8)) & 0xFF;
+      out[idx++] = (val >>> (bits - 8)) & 0xff;
       bits -= 8;
     }
   }
@@ -49,49 +51,62 @@ function sha1(data) {
   // zeros already in place; write 64-bit big-endian bit count
   var bitsHi = Math.floor(bitLen / 0x100000000);
   var bitsLo = bitLen >>> 0;
-  buf[padLen]     = (bitsHi >>> 24) & 0xFF;
-  buf[padLen + 1] = (bitsHi >>> 16) & 0xFF;
-  buf[padLen + 2] = (bitsHi >>> 8)  & 0xFF;
-  buf[padLen + 3] =  bitsHi          & 0xFF;
-  buf[padLen + 4] = (bitsLo >>> 24) & 0xFF;
-  buf[padLen + 5] = (bitsLo >>> 16) & 0xFF;
-  buf[padLen + 6] = (bitsLo >>> 8)  & 0xFF;
-  buf[padLen + 7] =  bitsLo          & 0xFF;
+  buf[padLen] = (bitsHi >>> 24) & 0xff;
+  buf[padLen + 1] = (bitsHi >>> 16) & 0xff;
+  buf[padLen + 2] = (bitsHi >>> 8) & 0xff;
+  buf[padLen + 3] = bitsHi & 0xff;
+  buf[padLen + 4] = (bitsLo >>> 24) & 0xff;
+  buf[padLen + 5] = (bitsLo >>> 16) & 0xff;
+  buf[padLen + 6] = (bitsLo >>> 8) & 0xff;
+  buf[padLen + 7] = bitsLo & 0xff;
 
-  var h0 = 0x67452301, h1 = 0xEFCDAB89, h2 = 0x98BADCFE,
-      h3 = 0x10325476, h4 = 0xC3D2E1F0;
+  var h0 = 0x67452301,
+    h1 = 0xefcdab89,
+    h2 = 0x98badcfe,
+    h3 = 0x10325476,
+    h4 = 0xc3d2e1f0;
   var W = new Array(80);
 
   for (var blk = 0; blk < buf.length; blk += 64) {
     for (var j = 0; j < 16; j++) {
-      W[j] = ((buf[blk + j*4]     << 24) |
-               (buf[blk + j*4 + 1] << 16) |
-               (buf[blk + j*4 + 2] <<  8) |
-                buf[blk + j*4 + 3]) >>> 0;
+      W[j] =
+        ((buf[blk + j * 4] << 24) |
+          (buf[blk + j * 4 + 1] << 16) |
+          (buf[blk + j * 4 + 2] << 8) |
+          buf[blk + j * 4 + 3]) >>>
+        0;
     }
     for (var j = 16; j < 80; j++) {
-      W[j] = rotl32(W[j-3] ^ W[j-8] ^ W[j-14] ^ W[j-16], 1);
+      W[j] = rotl32(W[j - 3] ^ W[j - 8] ^ W[j - 14] ^ W[j - 16], 1);
     }
 
-    var a = h0, b = h1, c = h2, d = h3, e = h4;
+    var a = h0,
+      b = h1,
+      c = h2,
+      d = h3,
+      e = h4;
 
     for (var t = 0; t < 80; t++) {
       var f, k;
       if (t < 20) {
         f = (b & c) | (~b & d);
-        k = 0x5A827999;
+        k = 0x5a827999;
       } else if (t < 40) {
         f = b ^ c ^ d;
-        k = 0x6ED9EBA1;
+        k = 0x6ed9eba1;
       } else if (t < 60) {
         f = (b & c) | (b & d) | (c & d);
-        k = 0x8F1BBCDC;
+        k = 0x8f1bbcdc;
       } else {
         f = b ^ c ^ d;
-        k = 0xCA62C1D6;
+        k = 0xca62c1d6;
       }
       var tmp = (rotl32(a, 5) + f + e + k + W[t]) >>> 0;
-      e = d; d = c; c = rotl32(b, 30); b = a; a = tmp;
+      e = d;
+      d = c;
+      c = rotl32(b, 30);
+      b = a;
+      a = tmp;
     }
 
     h0 = (h0 + a) >>> 0;
@@ -104,10 +119,10 @@ function sha1(data) {
   var r = new Uint8Array(20);
   var H = [h0, h1, h2, h3, h4];
   for (var i = 0; i < 5; i++) {
-    r[i*4]     = (H[i] >>> 24) & 0xFF;
-    r[i*4 + 1] = (H[i] >>> 16) & 0xFF;
-    r[i*4 + 2] = (H[i] >>> 8)  & 0xFF;
-    r[i*4 + 3] =  H[i]          & 0xFF;
+    r[i * 4] = (H[i] >>> 24) & 0xff;
+    r[i * 4 + 1] = (H[i] >>> 16) & 0xff;
+    r[i * 4 + 2] = (H[i] >>> 8) & 0xff;
+    r[i * 4 + 3] = H[i] & 0xff;
   }
   return r;
 }
@@ -127,7 +142,7 @@ function hmacSha1(keyBytes, msgBytes) {
   var opad = new Uint8Array(BSZ);
   for (var i = 0; i < BSZ; i++) {
     ipad[i] = key[i] ^ 0x36;
-    opad[i] = key[i] ^ 0x5C;
+    opad[i] = key[i] ^ 0x5c;
   }
 
   var innerBuf = new Uint8Array(BSZ + msgBytes.length);
@@ -152,17 +167,23 @@ function hotp(secretBase32, counter) {
   // counter as 8-byte big-endian (handles counters up to 2^53 via two 32-bit halves)
   var hi = Math.floor(counter / 0x100000000);
   var lo = counter >>> 0;
-  msg[0] = (hi >>> 24) & 0xFF; msg[1] = (hi >>> 16) & 0xFF;
-  msg[2] = (hi >>> 8)  & 0xFF; msg[3] =  hi          & 0xFF;
-  msg[4] = (lo >>> 24) & 0xFF; msg[5] = (lo >>> 16) & 0xFF;
-  msg[6] = (lo >>> 8)  & 0xFF; msg[7] =  lo          & 0xFF;
+  msg[0] = (hi >>> 24) & 0xff;
+  msg[1] = (hi >>> 16) & 0xff;
+  msg[2] = (hi >>> 8) & 0xff;
+  msg[3] = hi & 0xff;
+  msg[4] = (lo >>> 24) & 0xff;
+  msg[5] = (lo >>> 16) & 0xff;
+  msg[6] = (lo >>> 8) & 0xff;
+  msg[7] = lo & 0xff;
 
   var mac = hmacSha1(key, msg);
-  var off = mac[19] & 0x0F;
-  var code = (((mac[off]     & 0x7F) << 24) |
-               ((mac[off + 1] & 0xFF) << 16) |
-               ((mac[off + 2] & 0xFF) <<  8) |
-                (mac[off + 3] & 0xFF)) >>> 0;
+  var off = mac[19] & 0x0f;
+  var code =
+    (((mac[off] & 0x7f) << 24) |
+      ((mac[off + 1] & 0xff) << 16) |
+      ((mac[off + 2] & 0xff) << 8) |
+      (mac[off + 3] & 0xff)) >>>
+    0;
   return ('000000' + (code % 1000000)).slice(-6);
 }
 

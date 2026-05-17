@@ -1,6 +1,6 @@
 var storage = require('@system.storage');
-var router  = require('@system.router');
-var totp    = require('../../common/totp');
+var router = require('@system.router');
+var totp = require('../../common/totp');
 
 function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
@@ -8,28 +8,28 @@ function generateId() {
 
 module.exports = {
   data: {
-    name:     '',
-    secret:   '',
+    name: '',
+    secret: '',
     errorMsg: ''
   },
 
   onNameChange: function (e) {
-    this.name     = e.value;
+    this.name = e.value;
     this.errorMsg = '';
   },
 
   onSecretChange: function (e) {
     // Auto-uppercase; strip spaces so users can paste formatted secrets.
-    this.secret   = e.value.toUpperCase().replace(/\s/g, '');
+    this.secret = e.value.toUpperCase().replace(/\s/g, '');
     this.errorMsg = '';
   },
 
-  cancel: function () {
+  cancel: () => {
     router.back();
   },
 
   save: function () {
-    var name   = this.name.trim();
+    var name = this.name.trim();
     var secret = this.secret.trim();
 
     if (!name) {
@@ -50,31 +50,38 @@ module.exports = {
     }
 
     var newAccount = { id: generateId(), name: name, secret: secret };
-    var self       = this;
 
     storage.get({
       key: 'accounts',
-      success: function (data) {
+      success: (data) => {
         var accounts = [];
-        try { accounts = data ? JSON.parse(data) : []; } catch (e) { accounts = []; }
+        try {
+          accounts = data ? JSON.parse(data) : [];
+        } catch (e) {
+          accounts = [];
+        }
         accounts.push(newAccount);
         storage.set({
-          key:     'accounts',
-          value:   JSON.stringify(accounts),
-          success: function () { router.back(); },
-          fail:    function () {
-            self.errorMsg = 'Failed to save. Please try again.';
+          key: 'accounts',
+          value: JSON.stringify(accounts),
+          success: () => {
+            router.back();
+          },
+          fail: () => {
+            this.errorMsg = 'Failed to save. Please try again.';
           }
         });
       },
-      fail: function () {
+      fail: () => {
         // storage unavailable — try writing fresh list
         storage.set({
-          key:     'accounts',
-          value:   JSON.stringify([newAccount]),
-          success: function () { router.back(); },
-          fail:    function () {
-            self.errorMsg = 'Storage error. Cannot save account.';
+          key: 'accounts',
+          value: JSON.stringify([newAccount]),
+          success: () => {
+            router.back();
+          },
+          fail: () => {
+            this.errorMsg = 'Storage error. Cannot save account.';
           }
         });
       }

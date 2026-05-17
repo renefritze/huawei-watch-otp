@@ -1,14 +1,22 @@
 var storage = require('@system.storage');
-var router  = require('@system.router');
-var totp    = require('../../common/totp');
+var router = require('@system.router');
+var totp = require('../../common/totp');
 
 // @system.clipboard may not be available on all LiteWearable firmware versions.
 var clipboard = null;
-try { clipboard = require('@system.clipboard'); } catch (e) { clipboard = null; }
+try {
+  clipboard = require('@system.clipboard');
+} catch (e) {
+  clipboard = null;
+}
 
 // @system.prompt provides a native dialog on most devices.
 var prompt = null;
-try { prompt = require('@system.prompt'); } catch (e) { prompt = null; }
+try {
+  prompt = require('@system.prompt');
+} catch (e) {
+  prompt = null;
+}
 
 function formatCode(code) {
   return code.slice(0, 3) + ' ' + code.slice(3);
@@ -20,14 +28,14 @@ function generateId() {
 
 module.exports = {
   data: {
-    accounts:     [],
-    secondsLeft:  30,
+    accounts: [],
+    secondsLeft: 30,
     countdownPct: 100,
-    showCopied:   false,
-    showDelete:   false,
-    deleteName:   '',
-    _deleteId:    null,
-    _timer:       null
+    showCopied: false,
+    showDelete: false,
+    deleteName: '',
+    _deleteId: null,
+    _timer: null
   },
 
   onInit: function () {
@@ -50,53 +58,61 @@ module.exports = {
   /* ── private helpers ─────────────────────────────────────────────── */
 
   _loadAccounts: function () {
-    var self = this;
     storage.get({
       key: 'accounts',
-      success: function (data) {
+      success: (data) => {
         var raw = [];
-        try { raw = data ? JSON.parse(data) : []; } catch (e) { raw = []; }
-        self.accounts = raw.map(function (acc) {
+        try {
+          raw = data ? JSON.parse(data) : [];
+        } catch (e) {
+          raw = [];
+        }
+        this.accounts = raw.map((acc) => {
           var code = '';
-          try { code = totp.totp(acc.secret); } catch (e) { code = '------'; }
-          return { id: acc.id, name: acc.name, secret: acc.secret,
-                   displayCode: formatCode(code) };
+          try {
+            code = totp.totp(acc.secret);
+          } catch (e) {
+            code = '------';
+          }
+          return { id: acc.id, name: acc.name, secret: acc.secret, displayCode: formatCode(code) };
         });
       },
-      fail: function () {
-        self.accounts = [];
+      fail: () => {
+        this.accounts = [];
       }
     });
   },
 
   _startTimer: function () {
-    var self = this;
-    self._timer = setInterval(function () {
+    this._timer = setInterval(() => {
       var secs = totp.secondsUntilNextCode();
-      self.secondsLeft  = secs;
-      self.countdownPct = Math.round((secs / 30) * 100);
+      this.secondsLeft = secs;
+      this.countdownPct = Math.round((secs / 30) * 100);
       // Refresh codes on each tick (code changes at window boundary)
-      self.accounts = self.accounts.map(function (acc) {
+      this.accounts = this.accounts.map((acc) => {
         var code = '';
-        try { code = totp.totp(acc.secret); } catch (e) { code = '------'; }
-        return { id: acc.id, name: acc.name, secret: acc.secret,
-                 displayCode: formatCode(code) };
+        try {
+          code = totp.totp(acc.secret);
+        } catch (e) {
+          code = '------';
+        }
+        return { id: acc.id, name: acc.name, secret: acc.secret, displayCode: formatCode(code) };
       });
     }, 1000);
   },
 
-  _writeAccounts: function (arr, done) {
+  _writeAccounts: (arr, done) => {
     storage.set({
       key: 'accounts',
       value: JSON.stringify(arr),
-      success: done || function () {},
-      fail:    done || function () {}
+      success: done || (() => {}),
+      fail: done || (() => {})
     });
   },
 
   /* ── navigation ──────────────────────────────────────────────────── */
 
-  goToAdd: function () {
+  goToAdd: () => {
     router.push({ uri: 'pages/add/add' });
   },
 
@@ -107,16 +123,19 @@ module.exports = {
     var acc = this.accounts[idx];
     if (!acc) return;
     var code = acc.displayCode.replace(/\s/g, '');
-    var self = this;
 
     if (clipboard) {
       clipboard.set({
         text: code,
-        success: function () { self._flashCopied(); },
-        fail:    function () { self._flashCopied(); }
+        success: () => {
+          this._flashCopied();
+        },
+        fail: () => {
+          this._flashCopied();
+        }
       });
     } else {
-      self._flashCopied();
+      this._flashCopied();
     }
   },
 
@@ -124,39 +143,39 @@ module.exports = {
     var idx = parseInt(e.target.dataSet.index, 10);
     var acc = this.accounts[idx];
     if (!acc) return;
-    var self = this;
 
     if (prompt && prompt.showDialog) {
       prompt.showDialog({
-        title:   'Delete account',
+        title: 'Delete account',
         message: 'Delete "' + acc.name + '"?',
         buttons: [
           { text: 'Cancel', color: '#888888' },
           { text: 'Delete', color: '#ff4444' }
         ],
-        success: function (res) {
-          if (res.index === 1) self._doDeleteId(acc.id);
+        success: (res) => {
+          if (res.index === 1) this._doDeleteId(acc.id);
         }
       });
     } else {
       // Fallback custom dialog
-      this._deleteId  = acc.id;
+      this._deleteId = acc.id;
       this.deleteName = acc.name;
       this.showDelete = true;
     }
   },
 
   _flashCopied: function () {
-    var self = this;
-    self.showCopied = true;
-    setTimeout(function () { self.showCopied = false; }, 1500);
+    this.showCopied = true;
+    setTimeout(() => {
+      this.showCopied = false;
+    }, 1500);
   },
 
   /* ── delete dialog (fallback) ────────────────────────────────────── */
 
   cancelDelete: function () {
     this.showDelete = false;
-    this._deleteId  = null;
+    this._deleteId = null;
     this.deleteName = '';
   },
 
@@ -166,13 +185,10 @@ module.exports = {
   },
 
   _doDeleteId: function (id) {
-    var self    = this;
-    var updated = this.accounts.filter(function (a) { return a.id !== id; });
-    var plain   = updated.map(function (a) {
-      return { id: a.id, name: a.name, secret: a.secret };
-    });
-    this._writeAccounts(plain, function () {
-      self.accounts = updated;
+    var updated = this.accounts.filter((a) => a.id !== id);
+    var plain = updated.map((a) => ({ id: a.id, name: a.name, secret: a.secret }));
+    this._writeAccounts(plain, () => {
+      this.accounts = updated;
     });
   }
 };

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": {
+        "noVar": "off",
+        "useTemplate": "off",
+        "useSingleVarDeclarator": "off",
+        "useNumberNamespace": "off"
+      },
+      "complexity": {
+        "useOptionalChain": "off"
+      },
+      "suspicious": {
+        "noRedeclare": "off"
+      },
+      "correctness": {
+        "noInnerDeclarations": "off"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "always",
+      "trailingCommas": "none"
+    }
+  },
+  "files": {
+    "include": ["entry/src/main/js/**/*.js", "hvigorfile.ts", "entry/hvigorfile.ts"],
+    "ignore": ["node_modules/**", "build/**", "entry/build/**"]
+  }
+}
