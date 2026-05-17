@@ -1,0 +1,13 @@
+{
+  "apiType": "faApi",
+  "buildOption": {
+    "arkOptions": {
+      "ts2abc": true
+    }
+  },
+  "targets": [
+    {
+      "name": "default"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+<div class="container">
+
+  <text class="page-title">Add account</text>
+
+  <!-- Account name field -->
+  <text class="field-label">Account name</text>
+  <input class="field-input"
+         type="text"
+         value="{{ name }}"
+         placeholder="e.g. GitHub"
+         onchange="onNameChange" />
+
+  <!-- Secret key field -->
+  <text class="field-label">Secret key</text>
+  <input class="field-input"
+         type="text"
+         value="{{ secret }}"
+         placeholder="Base32 secret"
+         onchange="onSecretChange" />
+
+  <!-- Inline error message -->
+  <text class="error-text" if="{{ errorMsg !== '' }}">{{ errorMsg }}</text>
+  <div class="error-placeholder" else></div>
+
+  <!-- Action buttons -->
+  <div class="btn-row">
+    <button class="btn-cancel" onclick="cancel">Cancel</button>
+    <button class="btn-save"   onclick="save">Save</button>
+  </div>
+
+</div>

@@ -1,0 +1,12 @@
+{
+  "name": "com.rene.otpwatch",
+  "version": "1.0.0",
+  "description": "TOTP authenticator for HarmonyOS LiteWearable",
+  "main": "",
+  "author": "rene",
+  "license": "MIT",
+  "devDependencies": {
+    "@ohos/hvigor": "2.4.2",
+    "@ohos/hvigor-ohos-plugin": "2.4.2"
+  }
+}

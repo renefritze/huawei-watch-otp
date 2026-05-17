@@ -1,0 +1,20 @@
+# Build outputs
+node_modules/
+.preview/
+build/
+entry/build/
+
+# Signing material — populate manually or via CI secrets (see README)
+signing/
+*.p12
+*.cer
+*.p7b
+
+# Local developer config
+local.properties
+.idea/
+*.iml
+*.hprof
+
+# Regenerated lock file
+oh-package-lock.json5

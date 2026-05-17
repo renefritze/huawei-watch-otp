@@ -1,0 +1,58 @@
+name: Build HAP
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up HarmonyOS toolchain (ohpm + hvigorw)
+        uses: Snapp-Mobile/oh-action@v0.1
+
+      # ── Signing material ──────────────────────────────────────────────
+      - name: Restore signing files
+        run: |
+          mkdir -p signing
+          echo "${{ secrets.SIGNING_KEYSTORE_B64 }}" | base64 -d > signing/otp_watch.p12
+          echo "${{ secrets.SIGNING_CERT_B64 }}"     | base64 -d > signing/otp_watch.cer
+          echo "${{ secrets.SIGNING_PROFILE_B64 }}"  | base64 -d > signing/profile.p7b
+
+      - name: Inject signing passwords into build-profile.json5
+        run: |
+          sed -i 's/__STORE_PASSWORD__/${{ secrets.SIGNING_STORE_PASSWORD }}/g' build-profile.json5
+          sed -i 's/__KEY_PASSWORD__/${{ secrets.SIGNING_KEY_PASSWORD }}/g'     build-profile.json5
+
+      # ── Build ─────────────────────────────────────────────────────────
+      - name: Install dependencies
+        run: ohpm install --all
+
+      - name: Print hvigorw version
+        run: hvigorw --version --accept-license
+
+      - name: Clean
+        run: hvigorw clean --no-parallel --no-daemon
+
+      - name: Assemble HAP
+        run: >
+          hvigorw assembleHap
+          --mode module
+          -p product=default
+          --no-parallel
+          --no-daemon
+          --stacktrace
+
+      # ── Artifact ──────────────────────────────────────────────────────
+      - name: Upload HAP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: otp-watch-hap
+          path: entry/build/default/outputs/default/*.hap
+          if-no-files-found: error

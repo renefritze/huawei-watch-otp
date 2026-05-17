@@ -1,0 +1,212 @@
+.root {
+  width: 466px;
+  height: 466px;
+  background-color: #1a1a1a;
+}
+
+/* ── containers ──────────────────────────────────────────────────────── */
+
+.container {
+  width: 466px;
+  height: 466px;
+  flex-direction: column;
+}
+
+.empty-wrap {
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.list-wrap {
+  flex: 1;
+  flex-direction: column;
+}
+
+/* ── empty state ─────────────────────────────────────────────────────── */
+
+.empty-label {
+  color: #888888;
+  font-size: 18px;
+  margin-bottom: 24px;
+}
+
+.fab-empty {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background-color: #4caf50;
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+/* ── account list ────────────────────────────────────────────────────── */
+
+.account-list {
+  width: 466px;
+  height: 420px;
+}
+
+.account-item {
+  width: 466px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  border-bottom-width: 1px;
+  border-color: #2e2e2e;
+}
+
+.item-row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 418px;
+}
+
+.item-left {
+  flex-direction: column;
+  flex: 1;
+}
+
+.item-name {
+  color: #ffffff;
+  font-size: 18px;
+  margin-bottom: 4px;
+}
+
+.item-code {
+  color: #4caf50;
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 4px;
+}
+
+/* ── countdown arc ───────────────────────────────────────────────────── */
+
+.item-right {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 12px;
+  width: 56px;
+}
+
+.arc {
+  width: 50px;
+  height: 50px;
+  color: #4caf50;
+  stroke-width: 4px;
+}
+
+.arc-label {
+  color: #888888;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* ── FAB ─────────────────────────────────────────────────────────────── */
+
+.fab-wrap {
+  width: 466px;
+  height: 466px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding-top: 16px;
+  padding-right: 20px;
+}
+
+.fab {
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  background-color: #4caf50;
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* ── delete dialog overlay ───────────────────────────────────────────── */
+
+.overlay {
+  width: 466px;
+  height: 466px;
+  background-color: #000000;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.92;
+}
+
+.dialog {
+  width: 300px;
+  background-color: #242424;
+  border-radius: 16px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 28px;
+  padding-bottom: 20px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dialog-title {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.dialog-msg {
+  color: #aaaaaa;
+  font-size: 16px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.dialog-btns {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 252px;
+}
+
+.btn-cancel {
+  background-color: #333333;
+  color: #aaaaaa;
+  font-size: 16px;
+  width: 112px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.btn-delete {
+  background-color: #c62828;
+  color: #ffffff;
+  font-size: 16px;
+  width: 112px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+/* ── toast ───────────────────────────────────────────────────────────── */
+
+.toast-wrap {
+  width: 466px;
+  height: 466px;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 60px;
+}
+
+.toast-text {
+  background-color: #333333;
+  color: #ffffff;
+  font-size: 14px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 20px;
+}

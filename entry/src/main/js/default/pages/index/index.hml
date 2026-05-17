@@ -1,0 +1,59 @@
+<stack class="root">
+
+  <!-- ── Main content ───────────────────────────────────────────────── -->
+  <div class="container">
+
+    <!-- Empty state -->
+    <div class="empty-wrap" if="{{ accounts.length === 0 }}">
+      <text class="empty-label">No accounts</text>
+      <button class="fab-empty" onclick="goToAdd">+</button>
+    </div>
+
+    <!-- Account list -->
+    <div class="list-wrap" else>
+      <list class="account-list" scrollbar="off">
+        <list-item for="{{ accounts }}" class="account-item"
+                   data-index="{{ $idx }}"
+                   onclick="onItemClick"
+                   onlongpress="onItemLong">
+          <div class="item-row">
+            <div class="item-left">
+              <text class="item-name">{{ $item.name }}</text>
+              <text class="item-code">{{ $item.displayCode }}</text>
+            </div>
+            <div class="item-right">
+              <progress type="arc"
+                        percent="{{ countdownPct }}"
+                        class="arc"></progress>
+              <text class="arc-label">{{ secondsLeft }}s</text>
+            </div>
+          </div>
+        </list-item>
+      </list>
+    </div>
+
+  </div>
+
+  <!-- ── FAB (always visible) ───────────────────────────────────────── -->
+  <div class="fab-wrap">
+    <button class="fab" onclick="goToAdd">+</button>
+  </div>
+
+  <!-- ── Delete confirmation overlay ──────────────────────────────── -->
+  <div class="overlay" if="{{ showDelete }}">
+    <div class="dialog">
+      <text class="dialog-title">Delete account?</text>
+      <text class="dialog-msg">{{ deleteName }}</text>
+      <div class="dialog-btns">
+        <button class="btn-cancel" onclick="cancelDelete">Cancel</button>
+        <button class="btn-delete" onclick="doDelete">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── "Copied!" toast ───────────────────────────────────────────── -->
+  <div class="toast-wrap" if="{{ showCopied }}">
+    <text class="toast-text">Copied!</text>
+  </div>
+
+</stack>

@@ -1,0 +1,54 @@
+{
+  "app": {
+    "bundleName": "com.rene.otpwatch",
+    "vendor": "rene",
+    "version": {
+      "code": 1000000,
+      "name": "1.0.0"
+    },
+    "apiVersion": {
+      "compatible": 6,
+      "target": 7,
+      "releaseType": "Release"
+    }
+  },
+  "deviceConfig": {
+    "liteWearable": {}
+  },
+  "module": {
+    "package": "com.rene.otpwatch",
+    "name": ".default",
+    "deviceType": [
+      "liteWearable"
+    ],
+    "distro": {
+      "deliveryWithInstall": true,
+      "moduleName": "entry",
+      "moduleType": "entry"
+    },
+    "abilities": [
+      {
+        "name": "default",
+        "icon": "$media:icon",
+        "label": "OTPWatch",
+        "description": "TOTP authenticator for LiteWearable",
+        "launchType": "standard",
+        "type": "page",
+        "visible": true,
+        "js": [
+          {
+            "pages": [
+              "pages/index/index",
+              "pages/add/add"
+            ],
+            "name": "default",
+            "window": {
+              "designWidth": 466,
+              "autoDesignWidth": false
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          // Populated at build time via sed (CI) or by placing real files in signing/.
+          // See README.md § "One-time signing setup" for full instructions.
+          "storePassword": "__STORE_PASSWORD__",
+          "keyAlias": "otp_watch_key",
+          "keyPassword": "__KEY_PASSWORD__",
+          "profile": "./signing/profile.p7b",
+          "certpath": "./signing/otp_watch.cer",
+          "storeFile": "./signing/otp_watch.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "3.1.0(6)",
+        "targetSdkVersion": "3.1.0(7)",
+        "runtimeOS": "LiteOS"
+      }
+    ],
+    "buildModeSet": [
+      { "name": "debug"   },
+      { "name": "release" }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [ "default" ]
+        }
+      ]
+    }
+  ]
+}
