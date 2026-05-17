@@ -18,3 +18,4 @@ local.properties
 
 # Regenerated lock file
 oh-package-lock.json5
+.claude/settings.local.json
