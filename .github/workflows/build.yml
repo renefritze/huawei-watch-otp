@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up HarmonyOS toolchain (ohpm + hvigorw)
-        uses: Snapp-Mobile/oh-action@v0.1
+        uses: eclipse-oniro4openharmony/oh-app-action@409b744e155b8d14cdb22911b95f99fbc2976777
 
       # ── Signing material ──────────────────────────────────────────────
       - name: Restore signing files
