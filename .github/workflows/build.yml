@@ -40,14 +40,6 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
       # ── Build ─────────────────────────────────────────────────────────
-      - name: Configure ohpm registry
-        run: |
-          ohpm config set registry https://ohpm.openharmony.cn/ohpm/
-          ohpm config set @ohos:registry https://repo.harmonyos.com/npm/
-
-      - name: Install dependencies
-        run: ohpm install --all
-
       - name: Print hvigorw version
         run: hvigorw --version --accept-license
 
