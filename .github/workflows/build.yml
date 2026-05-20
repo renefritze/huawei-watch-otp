@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,14 +21,21 @@ jobs:
       - name: Restore signing files
         run: |
           mkdir -p signing
-          echo "${{ secrets.SIGNING_KEYSTORE_B64 }}" | base64 -d > signing/otp_watch.p12
-          echo "${{ secrets.SIGNING_CERT_B64 }}"     | base64 -d > signing/otp_watch.cer
-          echo "${{ secrets.SIGNING_PROFILE_B64 }}"  | base64 -d > signing/profile.p7b
+          python3 -c "import base64,os,pathlib; pathlib.Path('signing/otp_watch.p12').write_bytes(base64.b64decode(os.environ['SIGNING_KEYSTORE_B64']))"
+          python3 -c "import base64,os,pathlib; pathlib.Path('signing/otp_watch.cer').write_bytes(base64.b64decode(os.environ['SIGNING_CERT_B64']))"
+          python3 -c "import base64,os,pathlib; pathlib.Path('signing/profile.p7b').write_bytes(base64.b64decode(os.environ['SIGNING_PROFILE_B64']))"
+        env:
+          SIGNING_KEYSTORE_B64: ${{ secrets.SIGNING_KEYSTORE_B64 }}
+          SIGNING_CERT_B64: ${{ secrets.SIGNING_CERT_B64 }}
+          SIGNING_PROFILE_B64: ${{ secrets.SIGNING_PROFILE_B64 }}
 
       - name: Inject signing passwords into build-profile.json5
         run: |
-          sed -i 's/__STORE_PASSWORD__/${{ secrets.SIGNING_STORE_PASSWORD }}/g' build-profile.json5
-          sed -i 's/__KEY_PASSWORD__/${{ secrets.SIGNING_KEY_PASSWORD }}/g'     build-profile.json5
+          perl -pi -e 's/__STORE_PASSWORD__/$ENV{SIGNING_STORE_PASSWORD}/g' build-profile.json5
+          perl -pi -e 's/__KEY_PASSWORD__/$ENV{SIGNING_KEY_PASSWORD}/g' build-profile.json5
+        env:
+          SIGNING_STORE_PASSWORD: ${{ secrets.SIGNING_STORE_PASSWORD }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
       # ── Build ─────────────────────────────────────────────────────────
       - name: Install dependencies
