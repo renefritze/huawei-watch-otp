@@ -41,7 +41,7 @@ jobs:
 
       # ── Build ─────────────────────────────────────────────────────────
       - name: Configure ohpm registry
-        run: ohpm config set registry https://ohpm.openharmony.cn/ohpm/
+        run: ohpm config set registry https://repo.harmonyos.com/ohpm/
 
       - name: Install dependencies
         run: ohpm install --all
