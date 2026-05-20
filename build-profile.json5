@@ -11,6 +11,7 @@
           "keyAlias": "otp_watch_key",
           "keyPassword": "__KEY_PASSWORD__",
           "profile": "./signing/profile.p7b",
+          "signAlg": "SHA256withECDSA",
           "certpath": "./signing/otp_watch.cer",
           "storeFile": "./signing/otp_watch.p12"
         }
@@ -20,9 +21,10 @@
       {
         "name": "default",
         "signingConfig": "default",
-        "compatibleSdkVersion": "3.1.0(6)",
-        "targetSdkVersion": "3.1.0(7)",
-        "runtimeOS": "LiteOS"
+        "compileSdkVersion": 11,
+        "compatibleSdkVersion": 11,
+        "targetSdkVersion": 11,
+        "runtimeOS": "HarmonyOS"
       }
     ],
     "buildModeSet": [
