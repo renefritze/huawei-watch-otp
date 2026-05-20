@@ -16,6 +16,8 @@ jobs:
 
       - name: Set up HarmonyOS toolchain (ohpm + hvigorw)
         uses: eclipse-oniro4openharmony/oh-app-action@409b744e155b8d14cdb22911b95f99fbc2976777
+        with:
+          install-dependencies: 'false'
 
       # ── Signing material ──────────────────────────────────────────────
       - name: Restore signing files
@@ -38,6 +40,9 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
 
       # ── Build ─────────────────────────────────────────────────────────
+      - name: Configure ohpm registry
+        run: ohpm config set registry https://ohpm.openharmony.cn/ohpm/
+
       - name: Install dependencies
         run: ohpm install --all
 
